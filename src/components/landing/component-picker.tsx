@@ -14,6 +14,8 @@ import {
   stylePresets,
   deployTargets,
 } from "@/lib/config";
+import { SectionHeader } from "@/components/landing/section-header";
+import { FadeIn } from "@/components/landing/fade-in";
 import { cn } from "@/lib/utils";
 
 type Config = {
@@ -168,23 +170,17 @@ export function ComponentPicker() {
 
   return (
     <section id="picker" className="relative border-t border-white/10 bg-black py-24">
-      <div className="container mx-auto px-6 lg:px-16">
-        <div className="mb-12 max-w-2xl">
-          <div className="mb-3 flex items-center gap-2 opacity-60">
-            <div className="h-px w-8 bg-white" />
-            <span className="font-mono text-[10px] tracking-wider text-white">003</span>
-            <div className="h-px flex-1 bg-white" />
-          </div>
-          <h2
-            className="mb-4 font-mono text-2xl font-bold tracking-wider text-white lg:text-4xl"
-            style={{ letterSpacing: "0.08em" }}
-          >
-            BUILD YOUR STACK
-          </h2>
-          <p className="font-mono text-sm text-white/60">
-            Configure modules, providers, and style — get a personalized npx command instantly.
-          </p>
-        </div>
+      <div className="section-glow pointer-events-none absolute inset-0" />
+
+      <div className="container relative mx-auto px-6 lg:px-16">
+        <FadeIn>
+          <SectionHeader
+            index="004"
+            title="BUILD YOUR STACK"
+            description="Configure modules, providers, and style — get a personalized npx command instantly."
+            className="mb-12"
+          />
+        </FadeIn>
 
         <div className="grid gap-8 lg:grid-cols-2">
           <div className="space-y-6">
@@ -324,8 +320,8 @@ export function ComponentPicker() {
             </div>
           </div>
 
-          <div className="space-y-6">
-            <div className="border border-white/20">
+          <div className="space-y-6 lg:sticky lg:top-24 lg:self-start">
+            <div className="overflow-hidden border border-white/15 bg-black/50 backdrop-blur-sm">
               <div className="flex items-center gap-2 border-b border-white/10 px-4 py-2">
                 <Terminal className="h-3 w-3 text-white/40" />
                 <span className="font-mono text-[10px] text-white/40">TERMINAL PREVIEW</span>

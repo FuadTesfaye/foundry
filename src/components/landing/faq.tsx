@@ -4,6 +4,8 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { SectionHeader } from "@/components/landing/section-header";
+import { FadeIn } from "@/components/landing/fade-in";
 
 const faqs = [
   {
@@ -41,29 +43,23 @@ const faqs = [
 export function FAQ() {
   return (
     <section id="faq" className="relative border-t border-white/10 bg-black py-24">
-      <div className="container mx-auto max-w-3xl px-6 lg:px-16">
-        <div className="mb-12">
-          <div className="mb-3 flex items-center gap-2 opacity-60">
-            <div className="h-px w-8 bg-white" />
-            <span className="font-mono text-[10px] tracking-wider text-white">007</span>
-            <div className="h-px flex-1 bg-white" />
-          </div>
-          <h2
-            className="font-mono text-2xl font-bold tracking-wider text-white lg:text-4xl"
-            style={{ letterSpacing: "0.08em" }}
-          >
-            FAQ
-          </h2>
-        </div>
+      <div className="grid-bg pointer-events-none absolute inset-0 opacity-20" />
 
-        <Accordion type="single" collapsible className="w-full">
-          {faqs.map((faq, i) => (
-            <AccordionItem key={i} value={`item-${i}`}>
-              <AccordionTrigger>{faq.question}</AccordionTrigger>
-              <AccordionContent>{faq.answer}</AccordionContent>
-            </AccordionItem>
-          ))}
-        </Accordion>
+      <div className="container relative mx-auto max-w-3xl px-6 lg:px-16">
+        <FadeIn>
+          <SectionHeader index="008" title="FREQUENTLY ASKED" className="mb-12" />
+        </FadeIn>
+
+        <FadeIn delay={0.1}>
+          <Accordion type="single" collapsible className="w-full">
+            {faqs.map((faq, i) => (
+              <AccordionItem key={i} value={`item-${i}`}>
+                <AccordionTrigger className="text-left text-sm">{faq.question}</AccordionTrigger>
+                <AccordionContent className="text-sm leading-relaxed">{faq.answer}</AccordionContent>
+              </AccordionItem>
+            ))}
+          </Accordion>
+        </FadeIn>
       </div>
     </section>
   );
