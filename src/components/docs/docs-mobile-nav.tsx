@@ -7,7 +7,7 @@ import { docsNav } from "@/data/docs";
 export function DocsMobileNav() {
   const pathname = usePathname();
 
-  const allItems = docsNav.flatMap((g) => g.items);
+  const allItems = docsNav.flatMap((g) => [...g.items]);
 
   return (
     <div className="mb-8 overflow-x-auto border-b border-white/10 pb-4 lg:hidden">

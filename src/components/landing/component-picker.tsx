@@ -233,7 +233,7 @@ export function ComponentPicker() {
                     label={d.label}
                     selected={config.database === d.id}
                     onClick={() => setConfig((c) => ({ ...c, database: d.id }))}
-                    recommended={d.recommended}
+                    recommended={"recommended" in d && !!d.recommended}
                   />
                 ))}
               </div>
@@ -282,7 +282,7 @@ export function ComponentPicker() {
                       label={d.label}
                       selected={config.deploy === d.id}
                       onClick={() => setConfig((c) => ({ ...c, deploy: d.id }))}
-                      recommended={d.recommended}
+                      recommended={"recommended" in d && !!d.recommended}
                     />
                   ))}
                 </div>
