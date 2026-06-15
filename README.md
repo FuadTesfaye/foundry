@@ -52,4 +52,22 @@ npm run dev      # Development server
 npm run build    # Production build
 npm run start    # Production server
 npm run lint     # ESLint
+npm run cli:build  # Build create-foundry CLI
+npm run cli:dev    # Start Express web wizard at :4040
 ```
+
+## CLI (`create-foundry`)
+
+Interactive terminal wizard + Express web setup UI:
+
+```bash
+cd cli && npm install && npm run build
+
+# Terminal CLI (colorful FOUNDRY banner)
+node cli/dist/index.js
+
+# Express web wizard → http://localhost:4040
+npm run cli:dev
+```
+
+See [cli/README.md](cli/README.md) for full docs.

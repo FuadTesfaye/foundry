@@ -1,0 +1,35 @@
+{
+  "name": "create-foundry",
+  "version": "1.0.0",
+  "description": "Foundry — The Complete Next.js SaaS Starter Kit CLI",
+  "type": "module",
+  "bin": {
+    "create-foundry": "./dist/index.js"
+  },
+  "main": "./dist/index.js",
+  "scripts": {
+    "build": "tsc && node scripts/copy-public.mjs",
+    "dev": "tsx watch src/server.ts",
+    "dev:cli": "tsx src/index.ts",
+    "start": "node dist/server.js",
+    "cli": "node dist/index.js"
+  },
+  "files": ["dist", "templates"],
+  "keywords": ["foundry", "saas", "nextjs", "starter", "cli"],
+  "license": "MIT",
+  "dependencies": {
+    "@clack/prompts": "^0.10.0",
+    "chalk": "^5.4.1",
+    "cors": "^2.8.5",
+    "express": "^4.21.2",
+    "gradient-string": "^3.0.0",
+    "nanoid": "^5.1.5"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.17",
+    "@types/express": "^5.0.0",
+    "@types/node": "^20.17.10",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2"
+  }
+}

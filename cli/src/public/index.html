@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Foundry CLI — Setup Wizard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #050505;
+      --surface: #0c0c0c;
+      --border: rgba(255,255,255,0.08);
+      --text: #fafafa;
+      --muted: #71717a;
+      --cyan: #22d3ee;
+      --purple: #a855f7;
+      --pink: #ec4899;
+      --amber: #fbbf24;
+      --green: #34d399;
+      --blue: #60a5fa;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    .noise {
+      position: fixed; inset: 0; pointer-events: none; z-index: 100;
+      opacity: 0.35;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E");
+    }
+
+    .grid-bg {
+      position: fixed; inset: 0; pointer-events: none;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+      background-size: 48px 48px;
+    }
+
+    .glow-orb {
+      position: fixed; border-radius: 50%; filter: blur(120px); pointer-events: none;
+      animation: float 12s ease-in-out infinite;
+    }
+    .glow-orb.cyan { width: 400px; height: 400px; background: rgba(34,211,238,0.12); top: -100px; left: -100px; }
+    .glow-orb.purple { width: 500px; height: 500px; background: rgba(168,85,247,0.1); bottom: -150px; right: -100px; animation-delay: -4s; }
+    .glow-orb.pink { width: 300px; height: 300px; background: rgba(236,72,153,0.08); top: 40%; right: 20%; animation-delay: -8s; }
+
+    @keyframes float {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      50% { transform: translate(30px, -20px) scale(1.05); }
+    }
+
+    .container {
+      position: relative; z-index: 1;
+      max-width: 1100px; margin: 0 auto; padding: 2rem 1.5rem 4rem;
+    }
+
+    /* ── Logo ── */
+    .logo-wrap { text-align: center; margin-bottom: 2.5rem; }
+
+    .logo-ascii {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: clamp(0.45rem, 1.8vw, 0.65rem);
+      line-height: 1.15;
+      white-space: pre;
+      display: inline-block;
+      background: linear-gradient(135deg, var(--cyan), var(--purple), var(--pink), var(--amber), var(--green), var(--blue));
+      background-size: 300% 300%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: gradient-shift 6s ease infinite;
+      filter: drop-shadow(0 0 30px rgba(168,85,247,0.3));
+    }
+
+    @keyframes gradient-shift {
+      0%, 100% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+    }
+
+    .tagline {
+      margin-top: 1rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 0.15em;
+      color: var(--muted);
+      text-transform: uppercase;
+    }
+
+    .tagline span { color: var(--green); }
+
+    /* ── Layout ── */
+    .wizard-grid {
+      display: grid; gap: 1.5rem;
+      grid-template-columns: 1fr;
+    }
+    @media (min-width: 900px) {
+      .wizard-grid { grid-template-columns: 1fr 1fr; }
+    }
+
+    .panel {
+      border: 1px solid var(--border);
+      background: rgba(12,12,12,0.8);
+      backdrop-filter: blur(12px);
+    }
+
+    .panel-header {
+      display: flex; align-items: center; gap: 0.5rem;
+      padding: 0.75rem 1rem;
+      border-bottom: 1px solid var(--border);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.1em;
+      color: var(--muted);
+      text-transform: uppercase;
+    }
+
+    .panel-dot { width: 8px; height: 8px; border-radius: 50%; }
+    .panel-dot.red { background: #ef4444; }
+    .panel-dot.yellow { background: #fbbf24; }
+    .panel-dot.green { background: #34d399; }
+
+    .panel-body { padding: 1.25rem; }
+
+    /* ── Steps ── */
+    .steps {
+      display: flex; gap: 0.25rem; margin-bottom: 1.5rem; flex-wrap: wrap;
+    }
+
+    .step-pill {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.6rem;
+      padding: 0.35rem 0.65rem;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      cursor: pointer;
+      transition: all 0.2s;
+      letter-spacing: 0.05em;
+    }
+    .step-pill.active {
+      border-color: var(--purple);
+      color: var(--text);
+      background: rgba(168,85,247,0.1);
+      box-shadow: 0 0 20px rgba(168,85,247,0.15);
+    }
+    .step-pill.done { border-color: rgba(52,211,153,0.3); color: var(--green); }
+
+    .step-content { display: none; }
+    .step-content.active { display: block; animation: fadeIn 0.3s ease; }
+
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+
+    .field-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.12em;
+      color: var(--muted);
+      margin-bottom: 0.5rem;
+      text-transform: uppercase;
+    }
+
+    input[type="text"] {
+      width: 100%;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 0.75rem 1rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    input:focus { border-color: rgba(168,85,247,0.5); }
+
+    .options-grid { display: grid; gap: 0.5rem; }
+
+    .option-btn {
+      display: flex; align-items: flex-start; gap: 0.75rem;
+      width: 100%; text-align: left;
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 0.75rem 1rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-family: inherit;
+    }
+    .option-btn:hover { border-color: rgba(255,255,255,0.2); background: rgba(255,255,255,0.02); }
+    .option-btn.selected {
+      border-color: var(--purple);
+      background: rgba(168,85,247,0.08);
+      box-shadow: inset 0 0 0 1px rgba(168,85,247,0.2);
+    }
+
+    .option-check {
+      width: 14px; height: 14px; border: 1px solid var(--border);
+      flex-shrink: 0; margin-top: 2px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.6rem;
+    }
+    .option-btn.selected .option-check {
+      background: var(--purple); border-color: var(--purple); color: white;
+    }
+
+    .option-label { font-size: 0.85rem; font-weight: 500; }
+    .option-hint { font-size: 0.7rem; color: var(--muted); margin-top: 0.15rem; }
+
+    .module-chips { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+
+    .chip {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.65rem;
+      padding: 0.4rem 0.75rem;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--muted);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .chip.on {
+      border-color: var(--cyan);
+      color: var(--cyan);
+      background: rgba(34,211,238,0.08);
+    }
+
+    .nav-btns {
+      display: flex; justify-content: space-between; margin-top: 1.5rem; gap: 0.75rem;
+    }
+
+    .btn {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 0.1em;
+      padding: 0.65rem 1.25rem;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--text);
+      cursor: pointer;
+      transition: all 0.2s;
+      text-transform: uppercase;
+    }
+    .btn:hover { border-color: rgba(255,255,255,0.3); }
+    .btn:disabled { opacity: 0.3; cursor: not-allowed; }
+    .btn-primary {
+      border-color: var(--purple);
+      background: linear-gradient(135deg, rgba(168,85,247,0.2), rgba(236,72,153,0.15));
+    }
+    .btn-primary:hover { box-shadow: 0 0 24px rgba(168,85,247,0.25); }
+    .btn-success {
+      border-color: var(--green);
+      background: rgba(52,211,153,0.1);
+      color: var(--green);
+    }
+
+    /* ── Terminal preview ── */
+    .terminal {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.72rem;
+      line-height: 1.7;
+      color: #a1a1aa;
+      min-height: 320px;
+      max-height: 480px;
+      overflow-y: auto;
+    }
+    .terminal .cyan { color: var(--cyan); }
+    .terminal .purple { color: var(--purple); }
+    .terminal .green { color: var(--green); }
+    .terminal .amber { color: var(--amber); }
+    .terminal .pink { color: var(--pink); }
+    .terminal .white { color: #fafafa; }
+    .terminal .dim { color: #52525b; }
+
+    .command-block {
+      margin-top: 1rem;
+      padding: 1rem;
+      background: rgba(0,0,0,0.4);
+      border: 1px solid var(--border);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.68rem;
+      line-height: 1.6;
+      color: #d4d4d8;
+      white-space: pre-wrap;
+      word-break: break-all;
+      position: relative;
+    }
+
+    .copy-btn {
+      position: absolute; top: 0.5rem; right: 0.5rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.6rem;
+      padding: 0.25rem 0.5rem;
+      border: 1px solid var(--border);
+      background: rgba(0,0,0,0.6);
+      color: var(--muted);
+      cursor: pointer;
+    }
+    .copy-btn:hover { color: var(--text); border-color: rgba(255,255,255,0.2); }
+
+    .stats-row {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px;
+      background: var(--border); margin-top: 1rem;
+    }
+    .stat {
+      background: var(--surface); padding: 1rem; text-align: center;
+    }
+    .stat-val {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.5rem; font-weight: 700;
+      background: linear-gradient(135deg, var(--cyan), var(--purple));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+    .stat-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.55rem; letter-spacing: 0.15em;
+      color: var(--muted); margin-top: 0.25rem;
+    }
+
+    .badge-rec {
+      font-size: 0.55rem; padding: 0.1rem 0.35rem;
+      background: rgba(52,211,153,0.15); color: var(--green);
+      border: 1px solid rgba(52,211,153,0.3);
+      margin-left: 0.5rem;
+      vertical-align: middle;
+    }
+
+    .success-overlay {
+      display: none; text-align: center; padding: 2rem;
+    }
+    .success-overlay.show { display: block; }
+    .success-icon {
+      font-size: 3rem; margin-bottom: 1rem;
+      background: linear-gradient(135deg, var(--green), var(--cyan));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+  </style>
+</head>
+<body>
+  <div class="noise"></div>
+  <div class="grid-bg"></div>
+  <div class="glow-orb cyan"></div>
+  <div class="glow-orb purple"></div>
+  <div class="glow-orb pink"></div>
+
+  <div class="container">
+    <div class="logo-wrap">
+      <pre class="logo-ascii" id="logo"> ███████╗ ██████╗ ██╗   ██╗███╗   ██╗██████╗ ██████╗ ██╗   ██╗
+ ██╔════╝██╔═══██╗██║   ██║████╗  ██║██╔══██╗██╔══██╗╚██╗ ██╔╝
+ █████╗  ██║   ██║██║   ██║██╔██╗ ██║██║  ██║██████╔╝ ╚████╔╝
+ ██╔══╝  ██║   ██║██║   ██║██║╚██╗██║██║  ██║██╔══██╗  ╚██╔╝
+ ██║     ╚██████╔╝╚██████╔╝██║ ╚████║██████╔╝██║  ██║   ██║
+ ╚═╝      ╚═════╝  ╚═════╝ ╚═╝  ╚═══╝╚═════╝ ╚═╝  ╚═╝   ╚═╝</pre>
+      <p class="tagline">Next.js SaaS Starter <span>·</span> CLI Setup Wizard <span>·</span> v1.0.0</p>
+    </div>
+
+    <div class="wizard-grid">
+      <!-- Left: Wizard -->
+      <div class="panel">
+        <div class="panel-header">
+          <span class="panel-dot red"></span>
+          <span class="panel-dot yellow"></span>
+          <span class="panel-dot green"></span>
+          <span style="margin-left:0.5rem">foundry — configure</span>
+        </div>
+        <div class="panel-body">
+          <div class="steps" id="steps"></div>
+          <div id="step-panels"></div>
+          <div class="nav-btns">
+            <button class="btn" id="btn-prev" disabled>← Back</button>
+            <button class="btn btn-primary" id="btn-next">Continue →</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right: Terminal -->
+      <div class="panel">
+        <div class="panel-header">
+          <span class="panel-dot red"></span>
+          <span class="panel-dot yellow"></span>
+          <span class="panel-dot green"></span>
+          <span style="margin-left:0.5rem">terminal — live preview</span>
+        </div>
+        <div class="panel-body">
+          <div class="terminal" id="terminal"></div>
+          <div class="command-block" id="command-block" style="display:none">
+            <button class="copy-btn" id="copy-btn">COPY</button>
+            <span id="command-text"></span>
+          </div>
+          <div class="stats-row">
+            <div class="stat">
+              <div class="stat-val" id="stat-bundle">180</div>
+              <div class="stat-label">KB BUNDLE</div>
+            </div>
+            <div class="stat">
+              <div class="stat-val" id="stat-time">2w</div>
+              <div class="stat-label">TIME SAVED</div>
+            </div>
+            <div class="stat">
+              <div class="stat-val" id="stat-cost">$0</div>
+              <div class="stat-label">AT 0 USERS</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const STEPS = [
+      { id: 'name', label: '01 Name' },
+      { id: 'modules', label: '02 Modules' },
+      { id: 'auth', label: '03 Auth' },
+      { id: 'database', label: '04 Database' },
+      { id: 'ai', label: '05 AI' },
+      { id: 'queue', label: '06 Queue' },
+      { id: 'ui', label: '07 UI' },
+      { id: 'deploy', label: '08 Deploy' },
+      { id: 'review', label: '09 Review' },
+    ];
+
+    let sessionId = '';
+    let currentStep = 0;
+    let options = {};
+    let config = { modules: ['auth', 'payments', 'teams'] };
+
+    const $ = (s) => document.querySelector(s);
+
+    async function init() {
+      const [optRes, sessRes] = await Promise.all([
+        fetch('/api/options').then(r => r.json()),
+        fetch('/api/session', { method: 'POST' }).then(r => r.json()),
+      ]);
+      options = optRes;
+      sessionId = sessRes.sessionId;
+      renderSteps();
+      renderStepPanel(0);
+      updateTerminal();
+    }
+
+    function renderSteps() {
+      const el = $('#steps');
+      el.innerHTML = STEPS.map((s, i) =>
+        `<button class="step-pill ${i === currentStep ? 'active' : i < currentStep ? 'done' : ''}" data-step="${i}">${s.label}</button>`
+      ).join('');
+      el.querySelectorAll('.step-pill').forEach(btn => {
+        btn.onclick = () => { currentStep = +btn.dataset.step; renderSteps(); renderStepPanel(currentStep); };
+      });
+    }
+
+    function renderStepPanel(idx) {
+      const step = STEPS[idx];
+      const panels = $('#step-panels');
+      $('#btn-prev').disabled = idx === 0;
+      $('#btn-next').textContent = idx === STEPS.length - 1 ? 'Scaffold Project ✦' : 'Continue →';
+      $('#btn-next').className = idx === STEPS.length - 1 ? 'btn btn-success' : 'btn btn-primary';
+
+      let html = '';
+
+      if (step.id === 'name') {
+        html = `<div class="step-content active">
+          <div class="field-label">Project name</div>
+          <input type="text" id="input-name" placeholder="my-saas-app" value="${config.name || ''}" />
+        </div>`;
+      }
+
+      if (step.id === 'modules') {
+        html = `<div class="step-content active">
+          <div class="field-label">Select modules</div>
+          <div class="module-chips" id="module-chips">
+            ${options.modules.map(m => `<button class="chip ${config.modules.includes(m.id) ? 'on' : ''}" data-id="${m.id}">${m.label}</button>`).join('')}
+          </div>
+        </div>`;
+      }
+
+      if (step.id === 'auth') {
+        html = `<div class="step-content active"><div class="field-label">Auth provider</div><div class="options-grid" id="auth-options">
+          ${options.authProviders.map(a => optionHtml('auth', a)).join('')}</div></div>`;
+      }
+
+      if (step.id === 'database') {
+        html = `<div class="step-content active"><div class="field-label">Database</div><div class="options-grid" id="db-options">
+          ${options.databases.map(d => optionHtml('database', d, d.hint?.includes('recommended'))).join('')}</div></div>`;
+      }
+
+      if (step.id === 'ai') {
+        if (!config.modules.includes('ai')) {
+          html = `<div class="step-content active"><p style="color:var(--muted);font-size:0.85rem">AI module not selected — skip or go back to enable it.</p></div>`;
+        } else {
+          html = `<div class="step-content active"><div class="field-label">AI provider</div><div class="options-grid" id="ai-options">
+            ${options.aiProviders.map(a => optionHtml('ai', a)).join('')}</div></div>`;
+        }
+      }
+
+      if (step.id === 'queue') {
+        html = `<div class="step-content active"><div class="field-label">Queue / Jobs</div><div class="options-grid" id="queue-options">
+          ${options.queues.map(q => optionHtml('queue', q, q.hint?.includes('recommended'))).join('')}</div></div>`;
+      }
+
+      if (step.id === 'ui') {
+        html = `<div class="step-content active">
+          <div class="field-label" style="margin-top:0">Login layout</div>
+          <div class="options-grid" id="layout-options" style="margin-bottom:1rem">
+            ${options.loginLayouts.map(l => optionHtml('loginLayout', l)).join('')}
+          </div>
+          <div class="field-label">Style preset</div>
+          <div class="options-grid" id="style-options">
+            ${options.stylePresets.map(s => optionHtml('style', s)).join('')}
+          </div>
+        </div>`;
+      }
+
+      if (step.id === 'deploy') {
+        html = `<div class="step-content active"><div class="field-label">Deploy target</div><div class="options-grid" id="deploy-options">
+          ${options.deployTargets.map(d => optionHtml('deploy', d, d.hint?.includes('recommended'))).join('')}</div></div>`;
+      }
+
+      if (step.id === 'review') {
+        html = `<div class="step-content active">
+          <div class="field-label">Review configuration</div>
+          <pre style="font-family:'JetBrains Mono',monospace;font-size:0.72rem;line-height:1.8;color:var(--muted);white-space:pre-wrap" id="review-text"></pre>
+        </div>`;
+      }
+
+      panels.innerHTML = html;
+      bindPanelEvents(step.id);
+      if (step.id === 'review') updateReview();
+    }
+
+    function optionHtml(key, item, rec) {
+      const selected = config[key] === item.id;
+      return `<button class="option-btn ${selected ? 'selected' : ''}" data-key="${key}" data-val="${item.id}">
+        <span class="option-check">${selected ? '✓' : ''}</span>
+        <span><div class="option-label">${item.label}${rec ? '<span class="badge-rec">REC</span>' : ''}</div>
+        ${item.hint ? `<div class="option-hint">${item.hint}</div>` : ''}</span>
+      </button>`;
+    }
+
+    function bindPanelEvents(stepId) {
+      document.querySelectorAll('.option-btn').forEach(btn => {
+        btn.onclick = () => {
+          config[btn.dataset.key] = btn.dataset.val;
+          saveConfig();
+          renderStepPanel(currentStep);
+          updateTerminal();
+        };
+      });
+
+      const nameInput = $('#input-name');
+      if (nameInput) {
+        nameInput.oninput = () => { config.name = nameInput.value; saveConfig(); updateTerminal(); };
+      }
+
+      document.querySelectorAll('.chip').forEach(chip => {
+        chip.onclick = () => {
+          const id = chip.dataset.id;
+          if (config.modules.includes(id)) config.modules = config.modules.filter(m => m !== id);
+          else config.modules.push(id);
+          chip.classList.toggle('on');
+          saveConfig();
+          updateTerminal();
+        };
+      });
+    }
+
+    async function saveConfig() {
+      await fetch(`/api/session/${sessionId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(config),
+      });
+    }
+
+    function updateTerminal() {
+      const t = $('#terminal');
+      const lines = [
+        `<span class="purple">◆</span> <span class="white">Foundry</span> <span class="dim">— Next.js SaaS Starter</span>`,
+        '',
+        `<span class="dim">◇</span> Scaffolding <span class="cyan">${config.name || 'my-saas-app'}</span>...`,
+        '',
+      ];
+
+      if (config.auth) lines.push(`<span class="green">✓</span> Auth: <span class="cyan">${config.auth}</span>`);
+      if (config.database) lines.push(`<span class="green">✓</span> Database: <span class="cyan">${config.database}</span>`);
+      if (config.modules?.includes('ai') && config.ai) lines.push(`<span class="green">✓</span> AI: <span class="cyan">${config.ai}</span>`);
+      if (config.queue) lines.push(`<span class="green">✓</span> Queue: <span class="cyan">${config.queue}</span>`);
+      if (config.style) lines.push(`<span class="green">✓</span> Style: <span class="cyan">${config.style}</span>`);
+      if (config.deploy) lines.push(`<span class="green">✓</span> Deploy: <span class="cyan">${config.deploy}</span>`);
+      if (config.modules?.length) lines.push(`<span class="green">✓</span> Modules: <span class="amber">${config.modules.join(', ')}</span>`);
+
+      lines.push('', `<span class="dim">◆</span> Next: <span class="pink">cd ${config.name || 'my-saas'} && npm run dev</span>`);
+
+      t.innerHTML = lines.join('<br>');
+
+      // Stats
+      let kb = 180;
+      if (config.modules?.includes('ai')) kb += 45;
+      if (config.modules?.includes('payments')) kb += 30;
+      let weeks = 2;
+      if (config.modules?.includes('ai')) weeks += 3;
+      if (config.modules?.includes('payments')) weeks += 2;
+      $('#stat-bundle').textContent = kb;
+      $('#stat-time').textContent = weeks + 'w';
+
+      // Command preview
+      if (config.name && config.auth && config.database) {
+        const cmd = buildCommand();
+        $('#command-block').style.display = 'block';
+        $('#command-text').textContent = cmd;
+      }
+    }
+
+    function buildCommand() {
+      const parts = [
+        'npx create-foundry@latest',
+        `  --name ${config.name || 'my-saas'}`,
+        `  --auth ${config.auth || 'authjs'}`,
+        `  --db ${config.database || 'neon'}`,
+      ];
+      if (config.modules?.includes('ai')) parts.push(`  --ai ${config.ai || 'openai'}`);
+      parts.push(
+        `  --queue ${config.queue || 'inngest'}`,
+        `  --login-layout ${config.loginLayout || 'illustration'}`,
+        `  --style ${config.style || 'sharp'}`,
+        `  --deploy ${config.deploy || 'vercel'}`,
+        `  --modules ${(config.modules || []).join(',')}`
+      );
+      return parts.join(' \\\n');
+    }
+
+    function updateReview() {
+      $('#review-text').textContent = Object.entries(config)
+        .map(([k, v]) => `${k.padEnd(14)} ${Array.isArray(v) ? v.join(', ') : v}`)
+        .join('\n');
+    }
+
+    $('#btn-prev').onclick = () => {
+      if (currentStep > 0) { currentStep--; renderSteps(); renderStepPanel(currentStep); }
+    };
+
+    $('#btn-next').onclick = async () => {
+      if (STEPS[currentStep].id === 'name') {
+        config.name = $('#input-name')?.value || 'my-saas-app';
+        if (!/^[a-z0-9-]+$/i.test(config.name)) { alert('Use letters, numbers, and hyphens only'); return; }
+        await saveConfig();
+      }
+
+      if (currentStep === STEPS.length - 1) {
+        // Scaffold
+        config.auth = config.auth || 'authjs';
+        config.database = config.database || 'neon';
+        config.queue = config.queue || 'inngest';
+        config.loginLayout = config.loginLayout || 'illustration';
+        config.style = config.style || 'sharp';
+        config.deploy = config.deploy || 'vercel';
+        await saveConfig();
+
+        $('#btn-next').disabled = true;
+        $('#btn-next').textContent = 'Scaffolding...';
+
+        const res = await fetch(`/api/session/${sessionId}/scaffold`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({}),
+        });
+        const data = await res.json();
+
+        if (data.ok) {
+          $('#terminal').innerHTML += `<br><br><span class="green">✓</span> <span class="white">Project scaffolded at ${data.path}</span>`;
+          $('#btn-next').textContent = 'Done ✓';
+        } else {
+          alert(data.error || 'Scaffold failed');
+          $('#btn-next').disabled = false;
+          $('#btn-next').textContent = 'Scaffold Project ✦';
+        }
+        return;
+      }
+
+      // Skip AI step if module not selected
+      if (STEPS[currentStep + 1]?.id === 'ai' && !config.modules.includes('ai')) {
+        currentStep += 2;
+      } else {
+        currentStep++;
+      }
+      renderSteps();
+      renderStepPanel(currentStep);
+      updateTerminal();
+    };
+
+    $('#copy-btn')?.addEventListener('click', () => {
+      navigator.clipboard.writeText($('#command-text').textContent.replace(/\\\n/g, ' '));
+      $('#copy-btn').textContent = 'COPIED';
+      setTimeout(() => $('#copy-btn').textContent = 'COPY', 2000);
+    });
+
+    init();
+  </script>
+</body>
+</html>

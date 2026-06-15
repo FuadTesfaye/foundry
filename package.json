@@ -6,7 +6,11 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "cli:build": "npm run build --prefix cli",
+    "cli:dev": "npm run dev --prefix cli",
+    "cli": "npm run cli --prefix cli",
+    "create-foundry": "npm run dev:cli --prefix cli"
   },
   "dependencies": {
     "@radix-ui/react-accordion": "^1.2.14",
