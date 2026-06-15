@@ -1,35 +1,64 @@
+"use client";
+
+import { useState } from "react";
 import type { DocBlock, DocSection } from "@/data/docs";
+import { DocsPagination } from "@/components/docs/docs-pagination";
+import { Copy, Check } from "lucide-react";
+
+function CodeBlock({ code }: { code: string }) {
+  const [copied, setCopied] = useState(false);
+
+  const copy = async () => {
+    await navigator.clipboard.writeText(code);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
+  return (
+    <div className="group relative overflow-hidden border border-white/10 bg-[#0a0a0a]">
+      <button
+        type="button"
+        onClick={copy}
+        className="absolute top-3 right-3 border border-white/10 bg-black/80 p-1.5 opacity-0 transition-opacity group-hover:opacity-100"
+        aria-label="Copy code"
+      >
+        {copied ? (
+          <Check className="h-3 w-3 text-white/70" />
+        ) : (
+          <Copy className="h-3 w-3 text-white/50" />
+        )}
+      </button>
+      <pre className="overflow-x-auto p-5 font-mono text-[11px] leading-relaxed text-white/75">
+        <code>{code}</code>
+      </pre>
+    </div>
+  );
+}
 
 function DocBlockRenderer({ block }: { block: DocBlock }) {
   switch (block.type) {
     case "paragraph":
-      return <p className="font-mono text-sm leading-relaxed text-white/70">{block.text}</p>;
+      return <p className="text-sm leading-relaxed text-white/65 lg:text-base">{block.text}</p>;
     case "heading":
       if (block.level === 2) {
         return (
           <h2
             id={block.text.toLowerCase().replace(/\s+/g, "-")}
-            className="mt-10 mb-4 font-mono text-lg font-bold tracking-wider text-white first:mt-0"
+            className="mt-10 mb-4 font-mono text-base font-bold tracking-wider text-white first:mt-0 lg:text-lg"
           >
             {block.text}
           </h2>
         );
       }
-      return (
-        <h3 className="mt-6 mb-3 font-mono text-sm font-bold text-white/90">{block.text}</h3>
-      );
+      return <h3 className="mt-6 mb-3 text-sm font-semibold text-white/90">{block.text}</h3>;
     case "code":
-      return (
-        <pre className="overflow-x-auto border border-white/10 bg-white/[0.02] p-4 font-mono text-[11px] leading-relaxed text-white/80">
-          <code>{block.code}</code>
-        </pre>
-      );
+      return <CodeBlock code={block.code} />;
     case "list":
       return (
-        <ul className="space-y-2">
+        <ul className="space-y-2.5">
           {block.items.map((item, i) => (
-            <li key={i} className="flex items-start gap-2 font-mono text-sm text-white/70">
-              <span className="text-white/30">→</span>
+            <li key={i} className="flex items-start gap-3 text-sm text-white/65">
+              <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-white/40" />
               {item}
             </li>
           ))}
@@ -40,11 +69,11 @@ function DocBlockRenderer({ block }: { block: DocBlock }) {
         <div className="overflow-x-auto border border-white/10">
           <table className="w-full">
             <thead>
-              <tr className="border-b border-white/10">
+              <tr className="border-b border-white/10 bg-white/[0.02]">
                 {block.headers.map((h) => (
                   <th
                     key={h}
-                    className="px-4 py-2 text-left font-mono text-[10px] tracking-wider text-white/40"
+                    className="px-4 py-3 text-left font-mono text-[10px] tracking-wider text-white/40"
                   >
                     {h}
                   </th>
@@ -53,9 +82,9 @@ function DocBlockRenderer({ block }: { block: DocBlock }) {
             </thead>
             <tbody>
               {block.rows.map((row, i) => (
-                <tr key={i} className={i % 2 === 0 ? "bg-white/[0.02]" : ""}>
+                <tr key={i} className="border-b border-white/5 last:border-0">
                   {row.map((cell, j) => (
-                    <td key={j} className="px-4 py-2 font-mono text-xs text-white/70">
+                    <td key={j} className="px-4 py-3 text-xs text-white/65">
                       {cell}
                     </td>
                   ))}
@@ -72,14 +101,14 @@ function DocBlockRenderer({ block }: { block: DocBlock }) {
 
 function DocSectionRenderer({ section }: { section: DocSection }) {
   return (
-    <section id={section.slug} className="scroll-mt-24">
-      <div className="mb-4 flex items-center gap-2 opacity-60">
-        <div className="h-px w-6 bg-white/40" />
-        <h2 className="font-mono text-xs font-bold tracking-wider text-white">
+    <section id={section.slug} className="scroll-mt-28">
+      <div className="mb-5 flex items-center gap-3">
+        <div className="h-px w-6 bg-white/30" />
+        <h2 className="font-mono text-xs font-bold tracking-[0.15em] text-white/80">
           {section.title.toUpperCase()}
         </h2>
       </div>
-      <div className="space-y-4">
+      <div className="space-y-5">
         {section.content.map((block, i) => (
           <DocBlockRenderer key={i} block={block} />
         ))}
@@ -92,33 +121,32 @@ export function DocsContent({
   title,
   description,
   sections,
+  slug = "",
 }: {
   title: string;
   description: string;
   sections: DocSection[];
+  slug?: string;
 }) {
   return (
     <article className="max-w-3xl">
-      <header className="mb-12 border-b border-white/10 pb-8">
-        <p className="mb-2 font-mono text-[10px] tracking-wider text-white/40">DOCUMENTATION</p>
-        <h1
-          className="mb-4 font-mono text-3xl font-bold tracking-wider text-white lg:text-4xl"
-          style={{ letterSpacing: "0.06em" }}
-        >
+      <header className="mb-12 border-b border-white/10 pb-10">
+        <p className="mb-3 font-mono text-[10px] tracking-[0.2em] text-white/35">DOCUMENTATION</p>
+        <h1 className="mb-4 font-mono text-3xl font-bold tracking-[0.1em] text-white lg:text-4xl">
           {title.toUpperCase()}
         </h1>
-        <p className="font-mono text-sm text-white/60">{description}</p>
+        <p className="text-sm leading-relaxed text-white/55 lg:text-base">{description}</p>
       </header>
 
-      <div className="space-y-12">
+      <div className="space-y-14">
         {sections.map((section) => (
           <DocSectionRenderer key={section.slug} section={section} />
         ))}
       </div>
 
       {sections.length > 1 && (
-        <nav className="mt-16 border-t border-white/10 pt-8">
-          <p className="mb-4 font-mono text-[10px] tracking-wider text-white/40">ON THIS PAGE</p>
+        <nav className="mt-14 rounded border border-white/10 bg-white/[0.02] p-6">
+          <p className="mb-4 font-mono text-[9px] tracking-[0.2em] text-white/35">ON THIS PAGE</p>
           <ul className="space-y-2">
             {sections.map((s) => (
               <li key={s.slug}>
@@ -133,6 +161,8 @@ export function DocsContent({
           </ul>
         </nav>
       )}
+
+      <DocsPagination slug={slug} />
     </article>
   );
 }

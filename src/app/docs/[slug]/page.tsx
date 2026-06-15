@@ -29,5 +29,12 @@ export default async function DocPage({ params }: Props) {
 
   if (!doc) notFound();
 
-  return <DocsContent title={doc.title} description={doc.description} sections={doc.sections} />;
+  return (
+    <DocsContent
+      title={doc.title}
+      description={doc.description}
+      sections={doc.sections}
+      slug={slug}
+    />
+  );
 }

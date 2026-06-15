@@ -3,32 +3,38 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { docsNav } from "@/data/docs";
+import { DocsSearch } from "@/components/docs/docs-search";
 import { cn } from "@/lib/utils";
 
 export function DocsSidebar() {
   const pathname = usePathname();
 
   return (
-    <aside className="sticky top-0 h-screen w-64 shrink-0 overflow-y-auto border-r border-white/10 bg-black py-8">
-      <div className="px-6">
-        <Link
-          href="/docs"
-          className="-skew-x-12 transform font-mono text-sm font-bold tracking-widest text-white italic"
-        >
-          DOCS
-        </Link>
+    <aside className="sticky top-0 flex h-screen w-72 shrink-0 flex-col overflow-y-auto border-r border-white/10 bg-black">
+      <div className="border-b border-white/10 p-6">
         <Link
           href="/"
-          className="mt-2 block font-mono text-[10px] text-white/40 transition-colors hover:text-white"
+          className="-skew-x-12 transform font-mono text-sm font-bold tracking-[0.2em] text-white italic"
+        >
+          FOUNDRY
+        </Link>
+        <p className="mt-1 font-mono text-[9px] tracking-wider text-white/30">DOCUMENTATION</p>
+        <Link
+          href="/"
+          className="mt-3 inline-block font-mono text-[10px] text-white/40 transition-colors hover:text-white"
         >
           ← Back to site
         </Link>
       </div>
 
-      <nav className="mt-8 space-y-8 px-4">
+      <div className="p-4">
+        <DocsSearch />
+      </div>
+
+      <nav className="flex-1 space-y-8 px-4 pb-8">
         {docsNav.map((group) => (
           <div key={group.title}>
-            <h3 className="mb-3 px-2 font-mono text-[9px] tracking-wider text-white/30">
+            <h3 className="mb-2 px-2 font-mono text-[9px] tracking-[0.2em] text-white/25">
               {group.title.toUpperCase()}
             </h3>
             <ul className="space-y-0.5">
@@ -41,10 +47,10 @@ export function DocsSidebar() {
                     <Link
                       href={href}
                       className={cn(
-                        "block border-l-2 px-3 py-1.5 font-mono text-[11px] transition-colors",
+                        "block border-l-2 py-2 pr-2 pl-3 font-mono text-[11px] transition-all",
                         isActive
-                          ? "border-white text-white"
-                          : "border-transparent text-white/50 hover:border-white/30 hover:text-white/80"
+                          ? "border-white bg-white/[0.04] text-white"
+                          : "border-transparent text-white/45 hover:border-white/20 hover:text-white/75"
                       )}
                     >
                       {item.title}
