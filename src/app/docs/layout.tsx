@@ -11,7 +11,7 @@ export default function DocsLayout({ children }: { children: React.ReactNode }) 
             href="/"
             className="-skew-x-12 transform font-mono text-sm font-bold tracking-widest italic"
           >
-            NEXLAUNCH
+            FOUNDRY
           </Link>
           <Link href="/docs" className="font-mono text-[10px] text-white/60">
             DOCS

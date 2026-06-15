@@ -1,11 +1,11 @@
 export const platform = {
   app: {
-    name: "NexLaunch",
+    name: "Foundry",
     tagline: "The Complete Next.js SaaS Starter Kit",
     description:
       "Clone it. Run one command. Answer five questions. Ship in days, not months.",
-    url: "https://nexlaunch.dev",
-    supportEmail: "support@nexlaunch.dev",
+    url: "https://foundry.dev",
+    supportEmail: "support@foundry.dev",
   },
   version: "1.0.0",
 } as const;

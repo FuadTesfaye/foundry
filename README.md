@@ -1,4 +1,4 @@
-# NexLaunch
+# Foundry
 
 The complete Next.js SaaS starter kit — marketing site and documentation.
 

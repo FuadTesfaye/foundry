@@ -16,7 +16,7 @@ const features = [
     icon: Terminal,
     title: "CLI + Web Wizard",
     description:
-      "npx create-nexlaunch scaffolds your stack. /setup tests every connection live.",
+      "npx create-foundry scaffolds your stack. /setup tests every connection live.",
     span: "col-span-1 row-span-2",
     large: true,
   },

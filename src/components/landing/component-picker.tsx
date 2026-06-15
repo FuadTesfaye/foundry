@@ -118,7 +118,7 @@ export function ComponentPicker() {
   const command = useMemo(() => {
     const moduleList = Array.from(config.selectedModules).join(",");
     const lines = [
-      "npx create-nexlaunch@latest \\",
+      "npx create-foundry@latest \\",
       "  --name my-saas \\",
       `  --auth ${config.auth} \\`,
       `  --db ${config.database} \\`,
@@ -331,7 +331,7 @@ export function ComponentPicker() {
                 <span className="font-mono text-[10px] text-white/40">TERMINAL PREVIEW</span>
               </div>
               <div className="bg-black p-4 font-mono text-[11px] leading-relaxed">
-                <p className="text-white/40">◆ NexLaunch — Next.js SaaS Starter</p>
+                <p className="text-white/40">◆ Foundry — Next.js SaaS Starter</p>
                 <p className="mt-2 text-white/60">◇ Scaffolding my-saas...</p>
                 <p className="mt-1 text-green-400/80">✓ Auth: {config.auth}</p>
                 <p className="text-green-400/80">✓ Database: {config.database}</p>

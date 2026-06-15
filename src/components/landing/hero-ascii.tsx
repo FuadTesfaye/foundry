@@ -95,7 +95,7 @@ export function HeroAscii() {
         <div className="container mx-auto flex items-center justify-between px-4 py-3 lg:px-8 lg:py-4">
           <div className="flex items-center gap-2 lg:gap-4">
             <div className="-skew-x-12 transform font-mono text-xl font-bold tracking-widest text-white italic lg:text-2xl">
-              NEXLAUNCH
+              FOUNDRY
             </div>
             <div className="h-3 w-px bg-white/40 lg:h-4" />
             <span className="font-mono text-[8px] text-white/60 lg:text-[10px]">EST. 2025</span>
@@ -190,7 +190,7 @@ export function HeroAscii() {
             <div className="mt-6 hidden items-center gap-2 opacity-40 lg:flex">
               <span className="font-mono text-[9px] text-white">∞</span>
               <div className="h-px flex-1 bg-white" />
-              <span className="font-mono text-[9px] text-white">NEXLAUNCH</span>
+              <span className="font-mono text-[9px] text-white">FOUNDRY</span>
             </div>
           </div>
         </div>

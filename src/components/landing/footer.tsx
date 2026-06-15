@@ -29,7 +29,7 @@ export function Footer() {
         <div className="grid gap-12 md:grid-cols-4">
           <div>
             <div className="-skew-x-12 transform font-mono text-lg font-bold tracking-widest text-white italic">
-              NEXLAUNCH
+              FOUNDRY
             </div>
             <p className="mt-4 font-mono text-[10px] leading-relaxed text-white/40">
               {platform.app.description}

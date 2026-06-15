@@ -7,12 +7,12 @@ import {
 
 const faqs = [
   {
-    question: "How is NexLaunch different from other SaaS starters?",
+    question: "How is Foundry different from other SaaS starters?",
     answer:
       "Every integration is connected and tested before you write business logic. The CLI wizard and /setup page test real API connections — not just generate .env files. You get auth, payments, AI, jobs, analytics, and admin tools in one cohesive system.",
   },
   {
-    question: "What stack does NexLaunch use?",
+    question: "What stack does Foundry use?",
     answer:
       "Next.js 15, React 19, TypeScript 5, Tailwind CSS v4, shadcn/ui, Drizzle ORM, Auth.js v5, Vercel AI SDK, Inngest, Neon Postgres, Stripe, tRPC, and Hono. All swappable via platform.config.ts.",
   },
@@ -24,7 +24,7 @@ const faqs = [
   {
     question: "How long does setup take?",
     answer:
-      "Most developers are running locally in 10–15 minutes: npx create-nexlaunch, answer 5 questions, visit /setup to connect services, and you're building product features on day one.",
+      "Most developers are running locally in 10–15 minutes: npx create-foundry, answer 5 questions, visit /setup to connect services, and you're building product features on day one.",
   },
   {
     question: "Does it support self-hosting?",

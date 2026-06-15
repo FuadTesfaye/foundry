@@ -44,15 +44,15 @@ export const docsNav = [
 export const docsContent: Record<string, { title: string; description: string; sections: DocSection[] }> = {
   "": {
     title: "Introduction",
-    description: "Welcome to NexLaunch — the complete Next.js SaaS starter kit.",
+    description: "Welcome to Foundry — the complete Next.js SaaS starter kit.",
     sections: [
       {
-        title: "What is NexLaunch?",
-        slug: "what-is-nexlaunch",
+        title: "What is Foundry?",
+        slug: "what-is-foundry",
         content: [
           {
             type: "paragraph",
-            text: "NexLaunch is a production-ready Next.js SaaS starter where every integration is connected and tested before you write a single line of business logic. Auth, payments, AI, background jobs, analytics, and admin tools — all wired together.",
+            text: "Foundry is a production-ready Next.js SaaS starter where every integration is connected and tested before you write a single line of business logic. Auth, payments, AI, background jobs, analytics, and admin tools — all wired together.",
           },
           {
             type: "heading",
@@ -99,7 +99,7 @@ export const docsContent: Record<string, { title: string; description: string; s
   },
   "quick-start": {
     title: "Quick Start",
-    description: "Get NexLaunch running locally in under 15 minutes.",
+    description: "Get Foundry running locally in under 15 minutes.",
     sections: [
       {
         title: "Create a project",
@@ -112,10 +112,10 @@ export const docsContent: Record<string, { title: string; description: string; s
           {
             type: "code",
             language: "bash",
-            code: `npx create-nexlaunch@latest
+            code: `npx create-foundry@latest
 
 # Or with flags:
-npx create-nexlaunch@latest \\
+npx create-foundry@latest \\
   --name my-saas \\
   --auth authjs \\
   --db neon \\
@@ -466,7 +466,7 @@ npm run typecheck    # TypeScript strict`,
   },
   changelog: {
     title: "Changelog",
-    description: "Latest updates to NexLaunch.",
+    description: "Latest updates to Foundry.",
     sections: [
       {
         title: "v1.0.0 — June 2025",

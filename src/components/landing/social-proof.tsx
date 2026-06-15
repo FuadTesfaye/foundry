@@ -8,7 +8,7 @@ const metrics = [
 const testimonials = [
   {
     quote:
-      "I spent two weeks on auth and Stripe with my last starter. NexLaunch had everything running in 15 minutes.",
+      "I spent two weeks on auth and Stripe with my last starter. Foundry had everything running in 15 minutes.",
     author: "Sarah Chen",
     role: "Indie Hacker",
     company: "ShipFast Tools",

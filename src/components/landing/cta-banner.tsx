@@ -27,7 +27,7 @@ export function CTABanner() {
             </p>
             <div className="flex flex-col items-center justify-center gap-3 sm:flex-row">
               <Button asChild variant="solid" size="lg">
-                <Link href="#picker">npx create-nexlaunch@latest</Link>
+                <Link href="#picker">npx create-foundry@latest</Link>
               </Button>
               <Button asChild variant="outline" size="lg">
                 <Link href="/docs">READ THE DOCS</Link>

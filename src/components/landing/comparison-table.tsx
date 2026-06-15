@@ -1,16 +1,16 @@
 const competitors = [
-  { feature: "CLI installer", makerKit: false, supastarter: false, nexlaunch: true },
-  { feature: "Web /setup wizard", makerKit: false, supastarter: false, nexlaunch: true },
-  { feature: "5 login layouts", makerKit: false, supastarter: false, nexlaunch: true },
-  { feature: "AI workflow builder", makerKit: false, supastarter: false, nexlaunch: true },
-  { feature: "Service health dashboard", makerKit: false, supastarter: false, nexlaunch: true },
-  { feature: "Webhook inspector + replay", makerKit: false, supastarter: false, nexlaunch: true },
-  { feature: "Module marketplace", makerKit: false, supastarter: false, nexlaunch: true },
-  { feature: "White-label mode", makerKit: false, supastarter: false, nexlaunch: true },
-  { feature: "CLI code generator", makerKit: false, supastarter: false, nexlaunch: true },
-  { feature: "A/B testing framework", makerKit: false, supastarter: false, nexlaunch: true },
-  { feature: "GDPR toolkit", makerKit: false, supastarter: false, nexlaunch: true },
-  { feature: "Auth + Teams + Stripe", makerKit: true, supastarter: true, nexlaunch: true },
+  { feature: "CLI installer", makerKit: false, supastarter: false, foundry: true },
+  { feature: "Web /setup wizard", makerKit: false, supastarter: false, foundry: true },
+  { feature: "5 login layouts", makerKit: false, supastarter: false, foundry: true },
+  { feature: "AI workflow builder", makerKit: false, supastarter: false, foundry: true },
+  { feature: "Service health dashboard", makerKit: false, supastarter: false, foundry: true },
+  { feature: "Webhook inspector + replay", makerKit: false, supastarter: false, foundry: true },
+  { feature: "Module marketplace", makerKit: false, supastarter: false, foundry: true },
+  { feature: "White-label mode", makerKit: false, supastarter: false, foundry: true },
+  { feature: "CLI code generator", makerKit: false, supastarter: false, foundry: true },
+  { feature: "A/B testing framework", makerKit: false, supastarter: false, foundry: true },
+  { feature: "GDPR toolkit", makerKit: false, supastarter: false, foundry: true },
+  { feature: "Auth + Teams + Stripe", makerKit: true, supastarter: true, foundry: true },
 ];
 
 function Cell({ value }: { value: boolean }) {
@@ -39,7 +39,7 @@ export function ComparisonTable() {
             className="mb-4 font-mono text-2xl font-bold tracking-wider text-white lg:text-4xl"
             style={{ letterSpacing: "0.08em" }}
           >
-            WHY NEXLAUNCH
+            WHY FOUNDRY
           </h2>
           <p className="font-mono text-sm text-white/60">
             Same price range as MakerKit and Supastarter — with 3× the integrations wired and
@@ -61,7 +61,7 @@ export function ComparisonTable() {
                   SUPASTARTER
                 </th>
                 <th className="px-4 py-3 text-center font-mono text-[10px] tracking-wider text-white">
-                  NEXLAUNCH
+                  FOUNDRY
                 </th>
               </tr>
             </thead>
@@ -74,7 +74,7 @@ export function ComparisonTable() {
                   <td className="px-4 py-3 font-mono text-xs text-white/70">{row.feature}</td>
                   <Cell value={row.makerKit} />
                   <Cell value={row.supastarter} />
-                  <Cell value={row.nexlaunch} />
+                  <Cell value={row.foundry} />
                 </tr>
               ))}
             </tbody>
