@@ -14,7 +14,7 @@ import { SiteNav } from "@/components/landing/site-nav";
 export default function HomePage() {
   return (
     <main className="relative">
-      <div className="noise-overlay pointer-events-none fixed inset-0 z-50 opacity-50" />
+      <div className="noise-overlay pointer-events-none fixed inset-0 z-[1]" />
       <HeroAscii />
       <LogoStrip />
       <WorkflowTimeline />
